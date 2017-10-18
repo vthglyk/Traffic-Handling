@@ -4,7 +4,7 @@ from unittest import TestCase
 from server_info import ServerInfo
 
 
-class TestTraicHandling(TestCase):
+class TestTrafficHandling(TestCase):
     def test_parse_logs(self):
         file_path = "resources/test_access.log"
 

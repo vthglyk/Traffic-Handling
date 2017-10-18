@@ -1,3 +1,6 @@
+import json
+
+
 _NOTFOUND = object()
 
 
@@ -22,3 +25,11 @@ class ServerInfo(object):
 
     def __str__(self):
         return str(self.__dict__)
+
+
+class ServerInfoEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if not isinstance(obj, ServerInfo):
+            return super(ServerInfoEncoder, self).default(obj)
+
+        return obj.__dict__
