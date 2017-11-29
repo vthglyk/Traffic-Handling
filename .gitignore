@@ -174,4 +174,7 @@ venv.bak/
 # celery
 celerybeat-schedule
 
+# logs
+logs/
+
 # End of https://www.gitignore.io/api/python,pycharm

@@ -22,6 +22,14 @@ r.delete("blacklist")
 r.set("last_pos", 0)
 r.set("blacklist", json.dumps([]))
 
+rootLogger = logging.getLogger()
+
+fileHandler = logging.FileHandler("logs/traffic_handling.log")
+rootLogger.addHandler(fileHandler)
+
+consoleHandler = logging.StreamHandler()
+rootLogger.addHandler(consoleHandler)
+
 
 def add_worker_arguments(parser):
     parser.add_argument('--period', '-p', default=2, type=int,
