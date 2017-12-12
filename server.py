@@ -9,6 +9,7 @@ import atexit
 import requests
 import time
 import logging
+import json
 
 from flask import Flask, Response
 
@@ -56,13 +57,14 @@ def exit_handler():
     # Inform OAM that traffic handling module stopped
 
     logging.info('My application is ENDING!')
-    ending_req = requests.put(OAM_URL, data={'action': TRAFFIC_HANDLING_STOPPED, 'period_s': TRAFFIC_HANDLING_PERIOD})
+    payload = {'action': TRAFFIC_HANDLING_STOPPED, 'period_s': TRAFFIC_HANDLING_PERIOD}
+    ending_req = requests.put(OAM_URL, headers=HEADERS,
+                              data=json.dumps(payload))
     while ending_req.status_code != 200:
         logging.info('Could not contact OAM. Resending request')
         time.sleep(RESENDING_OAM_REQUEST_PERIOD)
         ending_req = requests.put(OAM_URL, headers=HEADERS,
-                                   data={'action': TRAFFIC_HANDLING_STOPPED,
-                                         'period_s': TRAFFIC_HANDLING_PERIOD})
+                                  data=json.dumps(payload))
 
     logging.info("OAM was informed successfully for the cancellation of the traffic handling module")
 
@@ -75,9 +77,10 @@ dir_path = os.getcwd()
 logging.debug("Working directory is: " + dir_path)
 
 # Inform OAM that traffic handling module started
+payload = {'action': TRAFFIC_HANDLING_STARTED, 'period_s': TRAFFIC_HANDLING_PERIOD}
+
 starting_req = requests.put(OAM_URL, headers=HEADERS,
-                             data={'action': TRAFFIC_HANDLING_STARTED,
-                                   'period_s': TRAFFIC_HANDLING_PERIOD})
+                            data=json.dumps(payload))
 
 if starting_req.status_code != 200:
     logging.info("Could not contact OAM")
