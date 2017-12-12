@@ -81,7 +81,7 @@ def parse_logs(log_file, last_pos, max_rules):
             parts = i.split()
 
             server_id = parts[1]
-            server_ip = parts[2]
+            server_ip = (parts[6].split('//')[1].split('/')[0])
             request_result = parts[3]
 
             if server_id in whitelist:
