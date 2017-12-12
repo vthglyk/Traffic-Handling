@@ -73,7 +73,7 @@ dir_path = os.getcwd()
 logging.debug("Working directory is: " + dir_path)
 
 # Inform OAM that traffic handling module started
-starting_req = requests.post("http://bugs.python.org", data={'action': TRAFFIC_HANDLING_STARTED,
+starting_req = requests.post(OAM_URL, data={'action': TRAFFIC_HANDLING_STARTED,
                                                              'period_s': TRAFFIC_HANDLING_PERIOD})
 
 if starting_req.status_code != 200:
