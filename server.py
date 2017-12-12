@@ -18,6 +18,7 @@ TRAFFIC_HANDLING_STARTED = 'STARTED'
 TRAFFIC_HANDLING_STOPPED = 'STOPPED'
 RESENDING_OAM_REQUEST_PERIOD = 10
 CELERY_WORKER_NAME = "celery_worker"
+HEADERS = {'content-type': 'application/json'}
 
 rootLogger = logging.getLogger()
 rootLogger.setLevel(logging.INFO)
@@ -59,8 +60,9 @@ def exit_handler():
     while ending_req.status_code != 200:
         logging.info('Could not contact OAM. Resending request')
         time.sleep(RESENDING_OAM_REQUEST_PERIOD)
-        ending_req = requests.post(OAM_URL, data={'action': TRAFFIC_HANDLING_STOPPED,
-                                                  'period_s': TRAFFIC_HANDLING_PERIOD})
+        ending_req = requests.post(OAM_URL, headers=HEADERS,
+                                   data={'action': TRAFFIC_HANDLING_STOPPED,
+                                         'period_s': TRAFFIC_HANDLING_PERIOD})
 
     logging.info("OAM was informed successfully for the cancellation of the traffic handling module")
 
@@ -73,8 +75,9 @@ dir_path = os.getcwd()
 logging.debug("Working directory is: " + dir_path)
 
 # Inform OAM that traffic handling module started
-starting_req = requests.post(OAM_URL, data={'action': TRAFFIC_HANDLING_STARTED,
-                                                             'period_s': TRAFFIC_HANDLING_PERIOD})
+starting_req = requests.post(OAM_URL, headers=HEADERS,
+                             data={'action': TRAFFIC_HANDLING_STARTED,
+                                   'period_s': TRAFFIC_HANDLING_PERIOD})
 
 if starting_req.status_code != 200:
     logging.info("Could not contact OAM")
