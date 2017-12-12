@@ -56,11 +56,11 @@ def exit_handler():
     # Inform OAM that traffic handling module stopped
 
     logging.info('My application is ENDING!')
-    ending_req = requests.post(OAM_URL, data={'action': TRAFFIC_HANDLING_STOPPED, 'period_s': TRAFFIC_HANDLING_PERIOD})
+    ending_req = requests.put(OAM_URL, data={'action': TRAFFIC_HANDLING_STOPPED, 'period_s': TRAFFIC_HANDLING_PERIOD})
     while ending_req.status_code != 200:
         logging.info('Could not contact OAM. Resending request')
         time.sleep(RESENDING_OAM_REQUEST_PERIOD)
-        ending_req = requests.post(OAM_URL, headers=HEADERS,
+        ending_req = requests.put(OAM_URL, headers=HEADERS,
                                    data={'action': TRAFFIC_HANDLING_STOPPED,
                                          'period_s': TRAFFIC_HANDLING_PERIOD})
 
@@ -75,7 +75,7 @@ dir_path = os.getcwd()
 logging.debug("Working directory is: " + dir_path)
 
 # Inform OAM that traffic handling module started
-starting_req = requests.post(OAM_URL, headers=HEADERS,
+starting_req = requests.put(OAM_URL, headers=HEADERS,
                              data={'action': TRAFFIC_HANDLING_STARTED,
                                    'period_s': TRAFFIC_HANDLING_PERIOD})
 
