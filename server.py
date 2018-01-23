@@ -13,7 +13,7 @@ import json
 
 from flask import Flask, Response
 
-OAM_URL = "http://bugs.python.org"
+OAM_URL = os.environ['oam_url']
 TRAFFIC_HANDLING_PERIOD = 10
 TRAFFIC_HANDLING_STARTED = 'STARTED'
 TRAFFIC_HANDLING_STOPPED = 'STOPPED'
@@ -81,7 +81,7 @@ payload = {'action': TRAFFIC_HANDLING_STARTED, 'period_s': TRAFFIC_HANDLING_PERI
 
 starting_req = requests.put(OAM_URL, headers=HEADERS,
                             data=json.dumps(payload))
-
+logging.debug("oam_url = " + OAM_URL)
 if starting_req.status_code != 200:
     logging.info("Could not contact OAM")
     sys.exit()
