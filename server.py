@@ -14,7 +14,7 @@ import json
 from flask import Flask, Response
 
 OAM_URL = os.environ['oam_url']
-TRAFFIC_HANDLING_PERIOD = 10
+TRAFFIC_HANDLING_PERIOD = os.environ['traffic_handling_period']
 TRAFFIC_HANDLING_STARTED = 'STARTED'
 TRAFFIC_HANDLING_STOPPED = 'STOPPED'
 RESENDING_OAM_REQUEST_PERIOD = 10
@@ -89,7 +89,7 @@ else:
     logging.info("OAM was contacted successfully")
 
 # Start process
-process = subprocess.Popen(["screen", "-S", CELERY_WORKER_NAME, "-d", "-m", "./start_celery_worker.sh"], shell=False, cwd=dir_path)
+process = subprocess.Popen(["screen", "-S", CELERY_WORKER_NAME, "-d", "-m", os.getcwd() + "/start_celery_worker.sh"], shell=False, cwd=dir_path)
 logging.debug("The pid of the child process is " + str(process.pid))
 
 
