@@ -14,7 +14,7 @@ import json
 from flask import Flask, Response
 
 OAM_URL = os.environ['oam_url']
-TRAFFIC_HANDLING_PERIOD = os.environ['traffic_handling_period']
+TRAFFIC_HANDLING_PERIOD = os.environ['traffic_handling_period'] if os.environ['traffic_handling_period'] else 10 
 TRAFFIC_HANDLING_STARTED = 'STARTED'
 TRAFFIC_HANDLING_STOPPED = 'STOPPED'
 RESENDING_OAM_REQUEST_PERIOD = 10
@@ -57,7 +57,7 @@ def exit_handler():
     # Inform OAM that traffic handling module stopped
 
     logging.info('My application is ENDING!')
-    payload = {'action': TRAFFIC_HANDLING_STOPPED, 'period_s': TRAFFIC_HANDLING_PERIOD}
+    payload = {'action': TRAFFIC_HANDLING_STOPPED, 'period_s': int(TRAFFIC_HANDLING_PERIOD)}
     ending_req = requests.put(OAM_URL, headers=HEADERS,
                               data=json.dumps(payload))
     while ending_req.status_code != 200:
@@ -77,11 +77,12 @@ dir_path = os.getcwd()
 logging.debug("Working directory is: " + dir_path)
 
 # Inform OAM that traffic handling module started
-payload = {'action': TRAFFIC_HANDLING_STARTED, 'period_s': TRAFFIC_HANDLING_PERIOD}
+payload = {'action': TRAFFIC_HANDLING_STARTED, 'period_s': int(TRAFFIC_HANDLING_PERIOD)}
 
 starting_req = requests.put(OAM_URL, headers=HEADERS,
                             data=json.dumps(payload))
 logging.debug("oam_url = " + OAM_URL)
+logging.info("traffic_handling_period = " + str(TRAFFIC_HANDLING_PERIOD))
 if starting_req.status_code != 200:
     logging.info("Could not contact OAM")
     sys.exit()
