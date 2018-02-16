@@ -110,14 +110,14 @@ def parse_logs(log_file, last_pos, max_rules):
 
 def construct_messages(old_blacklist, new_blacklist):
     rules_to_delete = []
+    rules_to_add = new_blacklist[:]
 
     for i in old_blacklist:
         if i not in new_blacklist:
             rules_to_delete.append(i)
         else:
-            new_blacklist.remove(i)
+            rules_to_add.remove(i)
 
-    rules_to_add = new_blacklist
     return [rules_to_add, rules_to_delete]
 
 
@@ -158,6 +158,9 @@ def extracting_rules():
 
     send_opf_rules(rules_to_add, rules_to_delete)
     blacklist = new_blacklist
+
+    logging.debug("new_blacklist = " + str(new_blacklist))
+    logging.debug("blacklist = " + str(blacklist))
 
     r.set('last_pos', last_pos)
     r.set("blacklist", json.dumps(blacklist, cls=ServerInfoEncoder))
