@@ -67,6 +67,7 @@ def setup_periodic_tasks(sender, **kwargs):
 
 def parse_logs(log_file, last_pos, max_rules):
     tcp_hit = "TCP_HIT"
+    tcp_mem_hit = "TCP_MEM_HIT"
     tcp_miss = "TCP_MISS"
 
     with open(log_file, 'r') as f:
@@ -88,7 +89,7 @@ def parse_logs(log_file, last_pos, max_rules):
             if server_id in whitelist:
                 continue
 
-            if tcp_hit in request_result:
+            if tcp_hit in request_result or tcp_mem_hit in request_result:
                 whitelist.append(server_id)
                 if server_id in banned_servers:
                     del banned_servers[server_id]
